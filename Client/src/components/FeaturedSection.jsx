@@ -50,7 +50,7 @@ const FeaturedSection = () => {
               {/* --- Image Box --- */}
               <div className="relative aspect-[16/10] w-full bg-[#fcfcfc] overflow-hidden flex items-center justify-center">
                 <img
-                  src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1920"
+                  src={car?.image || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1920"}
                   alt={car?.name || "Car"}
                   className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700"
                   onError={(e) => {
@@ -68,7 +68,7 @@ const FeaturedSection = () => {
                 <div className="flex justify-between items-end">
                   <div>
                     <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">
-                      {car?.name || "Premium Model"}
+                      {car?.brand} {car?.model}
                     </h3>
                     <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-1">
                       {car?.brand || "Authorized Fleet"} • {car?.fuelType || "Petrol"}
@@ -76,9 +76,9 @@ const FeaturedSection = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-primary text-xl font-black italic leading-none">
-                      ₹{car?.price || "0"}
+                      ₹{Number(car?.basePrice || 0).toLocaleString('en-IN')}
                     </p>
-                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tighter">Per Day</p>
+                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tighter">{car?.pricingModel === 'Outstation' ? 'Per KM' : 'Per Day'}</p>
                   </div>
                 </div>
 

@@ -5,8 +5,8 @@ import { toast } from "react-hot-toast";
 
 // Mock Data for Fallback
 const dummyCarData = [
-  { _id: "1", brand: "BMW", model: "Luxury Sedan", fuel_type: "Petrol", outstationRate: 15, seat_capacity: 5, transmission: "Automatic", image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1920" },
-  { _id: "2", brand: "Audi", model: "Premium SUV", fuel_type: "Diesel", outstationRate: 18, seat_capacity: 7, transmission: "Automatic", image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920" },
+  { _id: "1", brand: "BMW", model: "Luxury Sedan", fuel_type: "Petrol", basePrice: 15, pricingModel: "Outstation", minKm: 300, seat_capacity: 5, transmission: "Automatic", image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1920" },
+  { _id: "2", brand: "Audi", model: "Premium SUV", fuel_type: "Diesel", basePrice: 2500, pricingModel: "Local", seat_capacity: 7, transmission: "Automatic", image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920" },
 ];
 
 // Axios Default Config
@@ -81,11 +81,9 @@ export const CarContextProvider = ({ children }) => {
   // 5. Helper for Car Pricing logic
   const getCarPricing = (car, tripType = "Outstation", days = 1) => {
     if (!car) return { rate: 0, total: 0 };
-    const rate = tripType === "Outstation" 
-      ? (car.outstationRate || 12) 
-      : (car.localPackagePrice || 2500);
-    const total = tripType === "Outstation" 
-      ? (days * 300 * rate) 
+    const rate = Number(car.basePrice || 0);
+    const total = car.pricingModel === "Outstation" 
+      ? (days * (car.minKm || 300) * rate) 
       : (days * rate);
     return { rate, total };
   };

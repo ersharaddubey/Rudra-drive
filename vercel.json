@@ -19,13 +19,13 @@
     },
     {
       "src": "/(.*)",
-      "dest": "Client/$1",
+      "dest": "/$1",
       "check": true
     },
     {
       "src": "/(.*)",
-      "status": 200,
-      "dest": "Client/index.html"
+      "dest": "/index.html",
+      "status": 200
     }
   ]
 }
