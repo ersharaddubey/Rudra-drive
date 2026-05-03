@@ -2,7 +2,7 @@ import React from "react";
 import Title from "./Title";
 import { useNavigate, Link, useSearchParams } from "react-router-dom"; 
 import { useCarContext } from "../Context/context";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const FeaturedSection = () => {
   const navigate = useNavigate();

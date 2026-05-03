@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useCarContext } from "../Context/context";
 import { toast } from "react-hot-toast";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { 
   MapPin, Calendar, Clock, ChevronLeft, Fuel, Users, Settings2, ShieldCheck 
 } from "lucide-react";
@@ -124,8 +124,8 @@ const CarDetails = () => {
             <div className="bg-slate-50 p-4 rounded-2xl border-l-4 border-blue-600">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pricing starts at</p>
               <p className="text-3xl font-black text-slate-900">
-                ₹{car.outstationRate || car.localPackagePrice}
-                <span className="text-sm font-normal text-slate-500">/KM</span>
+                ₹{Number(car.basePrice || 0).toLocaleString('en-IN')}
+                <span className="text-sm font-normal text-slate-500">{car.pricingModel === 'Outstation' ? '/KM' : '/Day'}</span>
               </p>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useCarContext } from "../Context/context";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const Cars = () => {
   const [searchParams] = useSearchParams();

@@ -65,9 +65,11 @@ export const createBooking = async (req, res) => {
         const returned = new Date(returnDate);
         const numberOfDays = Math.ceil((returned - picked) / (1000 * 60 * 60 * 24)) || 1;
         
-        let totalAmount = tripType === "Outstation" 
-            ? numberOfDays * (carData.minKmPerDay || 300) * carData.outstationRate 
-            : numberOfDays * carData.localPackagePrice;
+        // Dynamic Price Calculation using new schema
+        // Outstation: Days * MinKM * Rate | Local: Days * PackagePrice
+        let totalAmount = carData.pricingModel === "Outstation" 
+            ? numberOfDays * (carData.minKm || 300) * carData.basePrice 
+            : numberOfDays * carData.basePrice;
 
         await Booking.create({
             car,

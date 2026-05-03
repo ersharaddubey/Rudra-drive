@@ -48,9 +48,9 @@ export const addCar = async (req, res) => {
         });
         const image = transformedUrl;
 
-        // Validation: Ensure rates are present
-        if (!car.outstationRate || !car.localPackagePrice) {
-            return res.json({ success: false, message: "Pricing rates (Outstation/Local) are required!" });
+        // Validation: Ensure base price and pricing model are present
+        if (!car.basePrice || !car.pricingModel) {
+            return res.json({ success: false, message: "Pricing details (Base Price and Pricing Model) are required!" });
         }
 
         await Car.create({
