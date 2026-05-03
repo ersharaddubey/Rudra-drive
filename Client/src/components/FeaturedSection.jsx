@@ -4,16 +4,10 @@ import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useCarContext } from "../Context/context";
 import { motion } from "framer-motion";
 
-const dummyCarData = [
-  { _id: "1", name: "Luxury Sedan", brand: "BMW", fuelType: "Petrol", price: "5000", type: "Sedan", seats: "5" },
-  { _id: "2", name: "Premium SUV", brand: "Audi", fuelType: "Diesel", price: "7000", type: "SUV", seats: "7" },
-  { _id: "3", name: "Sport Coupe", brand: "Mercedes", fuelType: "Petrol", price: "8500", type: "Coupe", seats: "2" },
-];
-
 const FeaturedSection = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { cars } = useCarContext();
+  const { cars, dummyCarData } = useCarContext();
 
   // Safety Check: Agar cars database se aa rahi hain toh wo, nahi toh dummy data
   const displayCars = cars && cars.length > 0 

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const Cars = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { cars, dummyCarData } = useCarContext();
+  const { cars, dummyCarData, getCarPricing } = useCarContext();
 
   const [input, setInput] = useState("");
   const [filterCars, setFilterCars] = useState([]);
@@ -16,18 +16,6 @@ const Cars = () => {
   const packageType = searchParams.get("packageType") || "";
   const pDate = searchParams.get("pDate");
   const isFromHero = !!pDate;
-
-  // === PRICE CALCULATION FUNCTION ===
-  // Wahi logic jo CarDetails mein use ho raha hai
-  const getDisplayPrice = (car) => {
-    if (tripType === "Outstation") {
-      // Outstation ke liye rate per KM (agar car.outstationRate nahi hai toh fallback 12)
-      return car.outstationRate || 12; 
-    } else {
-      // Local ke liye package price (fallback 2500)
-      return car.localPackagePrice || 2500;
-    }
-  };
 
   const applyFilter = () => {
     let carsToFilter = cars && cars.length > 0 ? cars : dummyCarData;
@@ -76,7 +64,7 @@ const Cars = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {filterCars.map((car, index) => {
             // Har car ke liye price calculate karein
-            const displayPrice = getDisplayPrice(car);
+            const { rate: displayPrice } = getCarPricing(car, tripType);
 
             return (
               <motion.div
@@ -93,7 +81,7 @@ const Cars = () => {
               >
                 <div className="relative aspect-[16/10] w-full bg-[#fcfcfc] overflow-hidden flex items-center justify-center">
                   <img
-                    src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1920"
+                    src={car?.image || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1920"}
                     alt={car?.name}
                     className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700"
                     onError={(e) => { e.target.src = "https://via.placeholder.com/400x250?text=No+Image"; }}

@@ -33,18 +33,11 @@ const UserRegister = () => {
       });
 
       if (data.success) {
-        const isUserOwner = role === "owner";
-        
-        // Save token and update global context
+        // setToken context ke useEffect ko trigger karega jo headers aur user fetch handle kar lega
         setToken(data.token);
-        localStorage.setItem("token", data.token);
-        
-        // Update axios default header for subsequent requests
-        axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+
+        const isUserOwner = role === "owner";
         setIsOwner(isUserOwner);
-        
-        // Fetch the newly registered user's profile
-        await fetchUser();
         
         toast.success(isUserOwner ? "Welcome Partner! Your account is ready." : "Welcome to RudraDrive!");
         

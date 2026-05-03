@@ -11,7 +11,7 @@ const CarDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { cars, dummyCarData, axios, user } = useCarContext();
+  const { cars, dummyCarData, axios, user, getCarPricing } = useCarContext();
 
   const [car, setCar] = useState(null);
   const [estimation, setEstimation] = useState(0);
@@ -38,12 +38,10 @@ const CarDetails = () => {
   // Price Estimation
   useEffect(() => {
     if (!car) return;
-    let rate = tripType === "Outstation" ? (car.outstationRate || 12) : (car.localPackagePrice || 2500);
-    let total = tripType === "Outstation" 
-      ? (numberOfDays * 300 * rate) 
-      : (numberOfDays * rate);
+    
+    const { total } = getCarPricing(car, tripType, numberOfDays);
     setEstimation(total);
-  }, [car, tripType, numberOfDays]);
+  }, [car, tripType, numberOfDays, getCarPricing]);
 
   // Load Car Data
   useEffect(() => {

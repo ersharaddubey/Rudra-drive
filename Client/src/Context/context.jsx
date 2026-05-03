@@ -10,7 +10,7 @@ const dummyCarData = [
 ];
 
 // Axios Default Config
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL || "";
 
 // 1. Context ko internal rakhein (Vite Fast Refresh error fix)
 const CarContext = createContext();
@@ -78,6 +78,18 @@ export const CarContextProvider = ({ children }) => {
     }
   };
 
+  // 5. Helper for Car Pricing logic
+  const getCarPricing = (car, tripType = "Outstation", days = 1) => {
+    if (!car) return { rate: 0, total: 0 };
+    const rate = tripType === "Outstation" 
+      ? (car.outstationRate || 12) 
+      : (car.localPackagePrice || 2500);
+    const total = tripType === "Outstation" 
+      ? (days * 300 * rate) 
+      : (days * rate);
+    return { rate, total };
+  };
+
   // 5. Logout Logic
   const logout = () => {
     localStorage.removeItem("token");
@@ -123,6 +135,7 @@ export const CarContextProvider = ({ children }) => {
     fetchUser,
     fetchcars,
     pickupDate,
+    getCarPricing,
     setPickupDate,
     returnDate,
     setReturnDate,

@@ -23,8 +23,6 @@ const UserLogin = () => {
 
       if (data.success) {
         setToken(data.token);
-        localStorage.setItem("token", data.token);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
 
         // सीधे नया टोकन भेजकर यूजर डेटा मंगाएं
         const fetchedUser = await fetchUser(data.token);
