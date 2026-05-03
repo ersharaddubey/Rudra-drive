@@ -1,0 +1,32 @@
+# --- Dependencies ---
+# Ye root, client aur server teeno ke node_modules ko ignore karega
+node_modules/
+**/node_modules/
+
+# --- Environment Variables ---
+# Sabse important: Aapka Atlas password isi me hai
+.env
+.env.*
+**/.env
+**/.env.local
+
+# --- Build Outputs ---
+dist/
+build/
+bin/
+obj/
+# Specific subfolder builds
+Client/dist/
+Client/build/
+Server/dist/
+
+# --- Logs & OS Files ---
+*.log
+.DS_Store
+Thumbs.db
+.cache/
+
+# --- Editor Settings ---
+.vscode/
+.idea/
+*.swp
