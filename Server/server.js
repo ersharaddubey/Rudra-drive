@@ -8,18 +8,21 @@ import userRouter from "./Routes/userRoutes.js";
 import ownerRouter from "./Routes/ownerRoutes.js";
 import bookingRouter from "./Routes/bookingRoutes.js";
 
-// Initialize app
 const app = express();
 
 // --- Database Connection ---
-// Top-level await for MongoDB
-try {
-    await connectDB();
-    console.log("✅ Database Connected Successfully");
-} catch (error) {
-    console.error("❌ Database Connection Failed:", error.message);
-    process.exit(1); // Server ko stop kar dega agar DB nahi mila
-}
+// Vercel serverless environment mein DB connection manage karna
+let isConnected = false;
+const connectToDatabase = async () => {
+    if (isConnected) return;
+    try {
+        await connectDB();
+        isConnected = true;
+        console.log("✅ Database Connected Successfully");
+    } catch (error) {
+        console.error("❌ Database Connection Failed:", error.message);
+    }
+};
 
 // --- Middlewares ---
 app.use(cors({
@@ -27,7 +30,13 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
 }));
-app.use(express.json()); // Body parser
+app.use(express.json());
+
+// Har request par DB connection ensure karein (Serverless nature ke liye)
+app.use(async (req, res, next) => {
+    await connectToDatabase();
+    next();
+});
 
 // --- API Routes ---
 app.use('/api/user', userRouter);
@@ -40,26 +49,24 @@ app.get("/", (req, res) => {
 });
 
 // --- 404 Handler ---
-// Agar koi galat URL hit kare toh
 app.use((req, res, next) => {
-    console.log(`404 - Not Found: ${req.method} ${req.originalUrl}`);
-    res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found on server` });
+    res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found` });
 });
 
-// --- Global Error Handling Middleware ---
+// --- Global Error Handling ---
 app.use((err, req, res, next) => {
-    console.error("Internal Error Stack:", err.stack);
     res.status(err.status || 500).json({ 
         success: false, 
-        message: err.message || 'Something went wrong on the server!' 
+        message: err.message || 'Internal Server Error' 
     });
 });
 
-// --- Server Startup ---
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port: ${PORT}`);
-});
+// Local development ke liye listen karein, Vercel ise ignore karega
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running locally on port: ${PORT}`);
+    });
+}
 
 export default app;
